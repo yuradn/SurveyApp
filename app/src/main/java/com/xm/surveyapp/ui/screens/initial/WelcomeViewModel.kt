@@ -20,7 +20,14 @@ class WelcomeViewModel(
     private val _uiState = MutableStateFlow<WelcomeScreenState>(InitialState)
     val uiState: StateFlow<WelcomeScreenState> = _uiState.asStateFlow()
 
-    fun loading() {
+    fun process(action: WelcomeAction) {
+        when(action) {
+            Load -> loading()
+            Reset -> reset()
+        }
+    }
+
+    private fun loading() {
         _uiState.update {
             ProgressState
         }
@@ -43,7 +50,7 @@ class WelcomeViewModel(
         }
     }
 
-    fun reset() {
+    private fun reset() {
         _uiState.update {
             InitialState
         }

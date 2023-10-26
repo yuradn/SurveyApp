@@ -30,7 +30,7 @@ fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel 
     when (screenState) {
         is CompleteState -> {
             navController.navigate(AppDestination.SurveyScreen.route)
-            viewModel.reset()
+            viewModel.process(Reset)
         }
 
         is ErrorState -> {
@@ -40,7 +40,7 @@ fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel 
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
-                        viewModel.reset()
+                        viewModel.process(Reset)
                     },
                 ) {
                     Text("Go back")
@@ -58,7 +58,7 @@ fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel 
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
-                        viewModel.loading()
+                        viewModel.process(Load)
                     },
                 ) {
                     Text("Start survey")
