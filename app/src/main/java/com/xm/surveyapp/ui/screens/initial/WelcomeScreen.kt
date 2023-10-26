@@ -1,4 +1,4 @@
-package com.xm.surveyapp.ui.screens
+package com.xm.surveyapp.ui.screens.initial
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,9 +21,10 @@ import com.xm.surveyapp.model.Query
 import com.xm.surveyapp.ui.screens.services.LocalApiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
-fun StartSurvey(action: (List<Query>) -> Unit) {
+fun WelcomeScreen(action: (List<Query>) -> Unit) {
     val scope = rememberCoroutineScope()
     val api = LocalApiRepository.current
 
@@ -51,7 +52,9 @@ fun StartSurvey(action: (List<Query>) -> Unit) {
                     loading.value = true
                     scope.launch(Dispatchers.IO) {
                         val queries = api.requestQuestions()
-                        action.invoke(queries)
+                        withContext(Dispatchers.Main) {
+                            action.invoke(queries)
+                        }
                     }
                 },
             ) {

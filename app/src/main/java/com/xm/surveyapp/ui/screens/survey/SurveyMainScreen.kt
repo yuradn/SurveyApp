@@ -1,4 +1,4 @@
-package com.xm.surveyapp.ui.screens
+package com.xm.surveyapp.ui.screens.survey
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -31,16 +31,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.xm.surveyapp.model.Answer
 import com.xm.surveyapp.model.Query
+import com.xm.surveyapp.ui.screens.Appbar
 import com.xm.surveyapp.ui.screens.services.LocalApiRepository
+import com.xm.surveyapp.ui.screens.services.LocalQueriesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun SurveyMainScreen() {
-    var page by remember { mutableStateOf<Int?>(null) }
-    val queries = remember { mutableListOf<Query>() }
+fun SurveyMainScreen(navController: NavHostController) {
+    val list = LocalQueriesRepository.current.getQuery()
+    var page by remember { mutableStateOf<Int>(0) }
+    val queries = remember { list }
     var questionsSubmitted by remember { mutableIntStateOf(0) }
     var answerText by rememberSaveable { mutableStateOf("") }
     var requestEvent by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -48,7 +52,7 @@ fun SurveyMainScreen() {
 
     DisposableEffect(key1 = page, key2 = requestEvent) {
         questionsSubmitted = queries.filter { it.sent }.size
-        page?.let {
+        page.let {
             textFieldIsEnable = queries[it].sent.not()
         }
         onDispose { }
@@ -56,19 +60,17 @@ fun SurveyMainScreen() {
 
     Scaffold(
         topBar = {
-            if (page != null) {
-                Appbar(page, queries.size,
-                    actionPrev = {
-                        if (page != null && page!! > 0) {
-                            page = page!! - 1
-                            answerText = queries[page!!].answer ?: ""
-                        }
-                    }, actionNext = {
-                        if (page != null && page!! < queries.size - 1) {
-                            page = page!! + 1
-                            answerText = queries[page!!].answer ?: ""
-                        }
-                    })
+            Appbar(navController, page, queries.size,
+                actionPrev = {
+                    if (page > 0) {
+                        page -= 1
+                        answerText = queries[page].answer ?: ""
+                    }
+                }) {
+                if (page < queries.size - 1) {
+                    page += 1
+                    answerText = queries[page].answer ?: ""
+                }
             }
         },
     ) { innerPadding ->
@@ -77,44 +79,38 @@ fun SurveyMainScreen() {
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (page == null) {
-                StartSurvey {
-                    queries.addAll(it)
-                    page = 0
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.LightGray),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Questions submitted: $questionsSubmitted",
-                        fontSize = 24.sp,
-                        modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
-                    )
-                    Spacer(modifier = Modifier.padding(16.dp))
-                    Text(text = queries[page!!].question, fontSize = 24.sp, color = Color.Black)
-                    Spacer(modifier = Modifier.padding(16.dp))
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = answerText,
-                        enabled = textFieldIsEnable,
-                        onValueChange = {
-                            queries[page!!].answer = it
-                            answerText = it
-                        },
-                        textStyle = LocalTextStyle.current.copy(fontSize = 24.sp),
-                        placeholder = { Text("Type here for an answer...", fontSize = 24.sp) },
-                    )
-                    Spacer(modifier = Modifier.padding(48.dp))
-                    SubmitButton(page!!, answerText, queries[page!!]) {
-                        queries[page!!].failure = it
-                        queries[page!!].sent = it
-                        requestEvent = System.currentTimeMillis()
-                    }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.LightGray),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Questions submitted: $questionsSubmitted",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
+                )
+                Spacer(modifier = Modifier.padding(16.dp))
+                Text(text = queries[page].question, fontSize = 24.sp, color = Color.Black)
+                Spacer(modifier = Modifier.padding(16.dp))
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = answerText,
+                    enabled = textFieldIsEnable,
+                    onValueChange = {
+                        queries[page].answer = it
+                        answerText = it
+                    },
+                    textStyle = LocalTextStyle.current.copy(fontSize = 24.sp),
+                    placeholder = { Text("Type here for an answer...", fontSize = 24.sp) },
+                )
+                Spacer(modifier = Modifier.padding(48.dp))
+                SubmitButton(page, answerText, queries[page]) {
+                    queries[page].failure = it
+                    queries[page].sent = it
+                    requestEvent = System.currentTimeMillis()
                 }
             }
         }
