@@ -1,4 +1,4 @@
-package com.xm.surveyapp.ui.screens.initial
+package com.xm.surveyapp.ui.screens.welcome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

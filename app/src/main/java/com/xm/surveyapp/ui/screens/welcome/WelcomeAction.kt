@@ -1,4 +1,4 @@
-package com.xm.surveyapp.ui.screens.initial
+package com.xm.surveyapp.ui.screens.welcome
 
 import com.xm.surveyapp.ui.foundation.Action
 

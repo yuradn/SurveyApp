@@ -1,4 +1,4 @@
-package com.xm.surveyapp.ui.screens.initial
+package com.xm.surveyapp.ui.screens.welcome
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.xm.surveyapp.ui.foundation.AppDestination
+import com.xm.surveyapp.ui.navigation.AppDestination
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -29,8 +29,8 @@ fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel 
 
     when (screenState) {
         is CompleteState -> {
-            navController.navigate(AppDestination.SurveyScreen.route)
             viewModel.process(Reset)
+            navController.navigate(AppDestination.SurveyScreen.route)
         }
 
         is ErrorState -> {

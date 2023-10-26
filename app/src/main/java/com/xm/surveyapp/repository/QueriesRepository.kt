@@ -1,8 +1,8 @@
 package com.xm.surveyapp.repository
 
-import com.xm.surveyapp.model.Query
+import com.xm.surveyapp.model.QueryDto
 
 interface QueriesRepository {
-    fun load(): List<Query>
-    fun save(queries: List<Query>)
+    fun load(): List<QueryDto>
+    fun save(queries: List<QueryDto>)
 }

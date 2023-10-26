@@ -1,4 +1,4 @@
-package com.xm.surveyapp.ui.screens.services
+package com.xm.surveyapp.services
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf

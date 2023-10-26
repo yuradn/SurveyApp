@@ -1,9 +1,9 @@
 package com.xm.surveyapp.repository
 
-import com.xm.surveyapp.model.Answer
-import com.xm.surveyapp.model.Query
+import com.xm.surveyapp.model.AnswerDto
+import com.xm.surveyapp.model.QueryDto
 
 interface ApiRepository {
-    suspend fun requestQuestions(): List<Query>
-    suspend fun post(answer: Answer): Boolean
+    suspend fun requestQuestions(): List<QueryDto>
+    suspend fun post(answerDto: AnswerDto): Boolean
 }

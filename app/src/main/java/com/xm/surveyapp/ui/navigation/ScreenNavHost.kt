@@ -5,9 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.xm.surveyapp.ui.foundation.AppDestination
-import com.xm.surveyapp.ui.screens.initial.WelcomeScreen
-import com.xm.surveyapp.ui.screens.survey.SurveyMainScreen
+import com.xm.surveyapp.ui.screens.welcome.WelcomeScreen
+import com.xm.surveyapp.ui.screens.survey.SurveyScreen
 
 @Composable
 fun AppNavController(navController: NavHostController = rememberNavController()) {
@@ -16,7 +15,7 @@ fun AppNavController(navController: NavHostController = rememberNavController())
             WelcomeScreen(navController)
         }
         composable(AppDestination.SurveyScreen.route) {
-            SurveyMainScreen(navController)
+            SurveyScreen(navController)
         }
     }
 }
