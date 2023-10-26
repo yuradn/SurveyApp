@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SurveyMainScreen(navController: NavHostController) {
-    val list = LocalQueriesRepository.current.getQuery()
+    val list = LocalQueriesRepository.current.load()
     var page by remember { mutableStateOf<Int>(0) }
     val queries = remember { list }
     var questionsSubmitted by remember { mutableIntStateOf(0) }

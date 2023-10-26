@@ -3,62 +3,81 @@ package com.xm.surveyapp.ui.screens.initial
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.xm.surveyapp.model.Query
-import com.xm.surveyapp.ui.screens.services.LocalApiRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.xm.surveyapp.ui.foundation.AppDestination
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun WelcomeScreen(action: (List<Query>) -> Unit) {
-    val scope = rememberCoroutineScope()
-    val api = LocalApiRepository.current
+fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel = koinViewModel()) {
+    val screenState by viewModel.uiState.collectAsState()
 
-    val loading = remember { mutableStateOf(false) }
-
-    if (loading.value) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Gray),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircularProgressIndicator()
+    when (screenState) {
+        is CompleteState -> {
+            navController.navigate(AppDestination.SurveyScreen.route)
+            viewModel.reset()
         }
-    } else {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "Welcome")
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(
-                onClick = {
-                    loading.value = true
-                    scope.launch(Dispatchers.IO) {
-                        val queries = api.requestQuestions()
-                        withContext(Dispatchers.Main) {
-                            action.invoke(queries)
-                        }
-                    }
-                },
+
+        is ErrorState -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(text = (screenState as ErrorState).message)
+                Spacer(modifier = Modifier.height(32.dp))
+                Button(
+                    onClick = {
+                        viewModel.reset()
+                    },
+                ) {
+                    Text("Go back")
+                }
+            }
+        }
+
+        InitialState -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Start survey")
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(text = "Welcome")
+                Spacer(modifier = Modifier.height(32.dp))
+                Button(
+                    onClick = {
+                        viewModel.loading()
+                    },
+                ) {
+                    Text("Start survey")
+                }
+            }
+        }
+
+        ProgressState -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.6f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator()
+                    Spacer(Modifier.padding(16.dp))
+                    Text("Loading...", color = Color.Green, fontSize = 24.sp)
+                }
             }
         }
     }
