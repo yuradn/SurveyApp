@@ -21,5 +21,5 @@ val appModule = module {
 
 val viewModelModule = module {
     viewModel { WelcomeViewModel(get(), get()) }
-    viewModel { SurveyViewModel(get(), get()) }
+    viewModel { SurveyViewModel(get(), get(), get()) }
 }

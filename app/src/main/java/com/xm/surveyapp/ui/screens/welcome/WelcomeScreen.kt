@@ -1,5 +1,6 @@
 package com.xm.surveyapp.ui.screens.welcome
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -50,18 +52,22 @@ fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel 
 
         InitialState -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.LightGray),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(text = "Welcome")
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(48.dp))
+                Text(text = "Welcome", color = Color.Black, fontSize = 24.sp)
+                Spacer(modifier = Modifier.height(60.dp))
                 Button(
                     onClick = {
                         viewModel.process(Load)
                     },
+                    border = BorderStroke(0.dp, Color.LightGray),
+                    shape = RoundedCornerShape(10)
                 ) {
-                    Text("Start survey")
+                    Text("Start survey", color = Color.Blue, fontSize = 20.sp)
                 }
             }
         }
@@ -70,13 +76,13 @@ fun WelcomeScreen(navController: NavHostController, viewModel: WelcomeViewModel 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.6f)),
+                    .background(Color.DarkGray),
                 contentAlignment = Alignment.Center
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     CircularProgressIndicator()
                     Spacer(Modifier.padding(16.dp))
-                    Text("Loading...", color = Color.Green, fontSize = 24.sp)
+                    Text("Loading...", color = Color.Blue, fontSize = 24.sp)
                 }
             }
         }

@@ -10,11 +10,5 @@ data class QueryDto(
     @SerialName("id")
     val id: Int,
     @SerialName("question")
-    val question: Question,
-    @kotlinx.serialization.Transient
-    var answer: String? = null,
-    @kotlinx.serialization.Transient
-    var sent: Boolean = false,
-    @kotlinx.serialization.Transient
-    var failure: Boolean? = null
+    val question: Question
 )

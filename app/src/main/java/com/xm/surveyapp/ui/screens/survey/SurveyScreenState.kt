@@ -8,6 +8,8 @@ data class SurveyScreenState(
     val hasPrev: Boolean = false,
     val question: String = "",
     val answer: String = "",
+    val submittedSize: Int = 0,
     val isSubmitted: Boolean = false,
-    val isDelivered: Boolean = false
+    val isDelivered: Boolean? = null,
+    val isPlaceSuccess: Boolean = false
 )

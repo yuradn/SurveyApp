@@ -9,4 +9,6 @@ sealed interface SurveyAction : Action {
     object PreviousPage : SurveyAction
     object Reset : SurveyAction
     class Edit(val text: String) : SurveyAction
+    object Submit : SurveyAction
+    object Post : SurveyAction
 }

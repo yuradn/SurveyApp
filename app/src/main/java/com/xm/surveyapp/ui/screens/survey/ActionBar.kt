@@ -14,18 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ActionBar(
-    navController: NavHostController,
     page: Int,
     size: Int,
     hasNext: Boolean,
     hasPrev: Boolean,
     actionPrev: () -> Unit,
-    actionNext: () -> Unit
+    actionNext: () -> Unit,
+    actionOnBack: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -40,7 +39,7 @@ fun ActionBar(
         navigationIcon = {
             IconButton(onClick = {
                 keyboardController?.hide()
-                navController.popBackStack()
+                actionOnBack.invoke()
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
